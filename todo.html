@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" placeholder="Enter task" id="task-field">
+    <button onclick="addTask()">Add</button>
+    <br />
+    <ul id="show-items">
+
+    </ul>
+
+
+    <script>
+
+        onload = function () {
+            loadTasks()
+        }
+
+        //loadTasks()
+        function addTask() {
+            let newTask = document.getElementById("task-field")
+            let existingList = getDataFromStorage()
+            existingList.push(newTask.value)
+            console.log(existingList)
+            localStorage.setItem("todoList", JSON.stringify(existingList))
+            // resetting the input field
+            newTask.value = ""
+            loadTasks()
+
+
+        }
+        function getDataFromStorage() {
+            const todoList = localStorage.getItem("todoList")
+            return todoList ? (JSON.parse(todoList)) : []
+        }
+        function loadTasks() {
+            let showTasks = document.getElementById("show-items")
+            showTasks.innerHTML = ""
+            
+            let renderItems = getDataFromStorage()
+            renderItems.forEach((i, index) => {
+                let liItem = document.createElement("li")
+                liItem.innerHTML = `${i}<button onclick = "deleteTasks(${index})">Delete Task</button>`
+                showTasks.appendChild(liItem)
+            })
+
+        }
+        function deleteTasks(id) {
+            console.log(id)
+            let storedData = getDataFromStorage()
+            storedData.splice(id, 1)
+            localStorage.setItem("todoList", JSON.stringify(storedData))
+            loadTasks()
+        }
+
+    </script>
+</body>
+
+</html>
